@@ -2186,22 +2186,22 @@ __webpack_require__.r(__webpack_exports__);
 
 class HeroSlider {
   constructor() {
-    if (document.querySelector(".hero-slider")) {
-      // count how many slides there are
-      const dotCount = document.querySelectorAll(".hero-slider__slide").length;
+    if (document.querySelector('.hero-slider')) {
+      // Count how many slides there are.
+      const dotCount = document.querySelectorAll('.hero-slider__slide').length;
 
-      // Generate the HTML for the navigation dots
-      let dotHTML = "";
+      // Generate the HTML for the navigation dots.
+      let dotHTML = '';
       for (let i = 0; i < dotCount; i++) {
         dotHTML += `<button class="slider__bullet glide__bullet" data-glide-dir="=${i}"></button>`;
       }
 
-      // Add the dots HTML to the DOM
-      document.querySelector(".glide__bullets").insertAdjacentHTML("beforeend", dotHTML);
+      // Add the dots HTML to the DOM.
+      document.querySelector('.glide__bullets').insertAdjacentHTML('beforeend', dotHTML);
 
-      // Actually initialize the glide / slider script
-      var glide = new _glidejs_glide__WEBPACK_IMPORTED_MODULE_0__["default"](".hero-slider", {
-        type: "carousel",
+      // Initialize the glide / slider script.
+      const glide = new _glidejs_glide__WEBPACK_IMPORTED_MODULE_0__["default"]('.hero-slider', {
+        type: 'carousel',
         perView: 1,
         autoplay: 3000
       });
@@ -2236,7 +2236,11 @@ class Like {
   }
   ourClickDispatcher(e) {
     const currentLikeBox = jquery__WEBPACK_IMPORTED_MODULE_0___default()(e.target).closest(".like-box");
-    if (currentLikeBox.attr("data-exists") === "yes") this.deleteLike(currentLikeBox);else this.createLike(currentLikeBox);
+    if ("yes" === currentLikeBox.attr("data-exists")) {
+      this.deleteLike(currentLikeBox);
+    } else {
+      this.createLike(currentLikeBox);
+    }
   }
   createLike(currentLikeBox) {
     jquery__WEBPACK_IMPORTED_MODULE_0___default().ajax({
@@ -2250,7 +2254,7 @@ class Like {
       },
       success: response => {
         currentLikeBox.attr("data-exists", "yes");
-        var likeCount = parseInt(currentLikeBox.find(".like-count").html(), 10);
+        let likeCount = parseInt(currentLikeBox.find(".like-count").html(), 10);
         likeCount++;
         currentLikeBox.find(".like-count").html(likeCount);
         currentLikeBox.attr("data-like", response);
@@ -2273,7 +2277,7 @@ class Like {
       },
       success: response => {
         currentLikeBox.attr("data-exists", "no");
-        var likeCount = parseInt(currentLikeBox.find(".like-count").html(), 10);
+        let likeCount = parseInt(currentLikeBox.find(".like-count").html(), 10);
         likeCount--;
         currentLikeBox.find(".like-count").html(likeCount);
         currentLikeBox.attr("data-like", "");
@@ -2367,7 +2371,7 @@ class MyNotes {
   }
   editNote(e) {
     const thisNote = jquery__WEBPACK_IMPORTED_MODULE_0___default()(e.target).parents("li");
-    if (thisNote.data("state") == "editable") {
+    if ("editable" === thisNote.data("state")) {
       this.makeNoteReadable(thisNote);
     } else {
       this.makeNoteEditable(thisNote);
@@ -2422,18 +2426,18 @@ class MyNotes {
       success: response => {
         jquery__WEBPACK_IMPORTED_MODULE_0___default()(".new-note-title, .new-note-body").val("");
         jquery__WEBPACK_IMPORTED_MODULE_0___default()(`
-          <li data-id="${response.id}">
-              <input readonly class="note-title-field" value="${response.title.raw}">
-              <span class="edit-note"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</span>
-              <span class="delete-note"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</span>
-              <textarea readonly class="note-body-field">${response.content.raw}</textarea>
-              <span class="update-note btn btn--blue btn--small"><i class="fa fa-arrow-right" aria-hidden="true"></i> Save</span>
-          </li>  
-        `).prependTo("#my-notes").hide().slideDown();
+					<li data-id="${response.id}">
+						<input readonly class="note-title-field" value="${response.title.raw}">
+						<span class="edit-note"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</span>
+						<span class="delete-note"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</span>
+						<textarea readonly class="note-body-field">${response.content.raw}</textarea>
+						<span class="update-note btn btn--blue btn--small"><i class="fa fa-arrow-right" aria-hidden="true"></i> Save</span>
+					</li>  
+				`).prependTo("#my-notes").hide().slideDown();
         console.log(response);
       },
       error: response => {
-        if (response.responseText === "You can only create 5 notes.") {
+        if ("You can only create 5 notes." === response.responseText) {
           jquery__WEBPACK_IMPORTED_MODULE_0___default()(".note-limit-message").addClass("active");
         }
         console.log(response);
@@ -2458,58 +2462,54 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! jquery */ "jquery");
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_1__);
+
 
 class Search {
-  // 1. describe and create/initiate our object
   constructor() {
     this.addSearchHTML();
-    this.resultsDiv = document.querySelector("#search-overlay__results");
-    this.openButton = document.querySelectorAll(".js-search-trigger");
-    this.closeButton = document.querySelector(".search-overlay__close");
-    this.searchOverlay = document.querySelector(".search-overlay");
-    this.searchField = document.querySelector("#search-term");
+    this.resultsDiv = jquery__WEBPACK_IMPORTED_MODULE_1___default()("#search-overlay__results");
+    this.openButton = jquery__WEBPACK_IMPORTED_MODULE_1___default()(".js-search-trigger");
+    this.closeButton = jquery__WEBPACK_IMPORTED_MODULE_1___default()(".search-overlay__close");
+    this.searchOverlay = jquery__WEBPACK_IMPORTED_MODULE_1___default()(".search-overlay");
+    this.searchField = jquery__WEBPACK_IMPORTED_MODULE_1___default()("#search-term");
     this.isOverlayOpen = false;
     this.isSpinnerVisible = false;
     this.previousValue;
     this.typingTimer;
     this.events();
   }
-
-  // 2. events
   events() {
-    this.openButton.forEach(el => {
-      el.addEventListener("click", e => {
-        e.preventDefault();
-        this.openOverlay();
-      });
+    this.openButton.on("click", e => {
+      e.preventDefault();
+      this.openOverlay();
     });
-    this.closeButton.addEventListener("click", () => this.closeOverlay());
-    document.addEventListener("keydown", e => this.keyPressDispatcher(e));
-    this.searchField.addEventListener("keyup", () => this.typingLogic());
+    this.closeButton.on("click", () => this.closeOverlay());
+    jquery__WEBPACK_IMPORTED_MODULE_1___default()(document).on("keydown", e => this.keyPressDispatcher(e));
+    this.searchField.on("keyup", () => this.typingLogic());
   }
-
-  // 3. methods (function, action...)
   typingLogic() {
-    if (this.searchField.value != this.previousValue) {
+    if (this.searchField.val() !== this.previousValue) {
       clearTimeout(this.typingTimer);
-      if (this.searchField.value) {
+      if (this.searchField.val()) {
         if (!this.isSpinnerVisible) {
-          this.resultsDiv.innerHTML = '<div class="spinner-loader"></div>';
+          this.resultsDiv.html('<div class="spinner-loader"></div>');
           this.isSpinnerVisible = true;
         }
         this.typingTimer = setTimeout(this.getResults.bind(this), 750);
       } else {
-        this.resultsDiv.innerHTML = "";
+        this.resultsDiv.html("");
         this.isSpinnerVisible = false;
       }
     }
-    this.previousValue = this.searchField.value;
+    this.previousValue = this.searchField.val();
   }
   async getResults() {
     try {
-      const response = await axios__WEBPACK_IMPORTED_MODULE_0___default().get(universityData.root_url + "/wp-json/university/v1/search?term=" + this.searchField.value);
+      const response = await axios__WEBPACK_IMPORTED_MODULE_0___default().get(universityData.root_url + "/wp-json/university/v1/search?term=" + this.searchField.val());
       const results = response.data;
-      this.resultsDiv.innerHTML = `
+      this.resultsDiv.html(`
         <div class="row">
           <div class="one-third">
             <h2 class="search-overlay__section-title">General Information</h2>
@@ -2534,7 +2534,6 @@ class Search {
                 </li>
               `).join("")}
             ${results.professors.length ? "</ul>" : ""}
-
           </div>
           <div class="one-third">
             <h2 class="search-overlay__section-title">Campuses</h2>
@@ -2556,17 +2555,16 @@ class Search {
                   </div>
                 </div>
               `).join("")}
-
           </div>
         </div>
-      `;
+      `);
       this.isSpinnerVisible = false;
     } catch (e) {
       console.log(e);
     }
   }
   keyPressDispatcher(e) {
-    if (e.keyCode == 83 && !this.isOverlayOpen && document.activeElement.tagName != "INPUT" && document.activeElement.tagName != "TEXTAREA") {
+    if (e.keyCode == 83 && !this.isOverlayOpen && !["INPUT", "TEXTAREA"].includes(document.activeElement.tagName)) {
       this.openOverlay();
     }
     if (e.keyCode == 27 && this.isOverlayOpen) {
@@ -2574,22 +2572,19 @@ class Search {
     }
   }
   openOverlay() {
-    this.searchOverlay.classList.add("search-overlay--active");
-    document.body.classList.add("body-no-scroll");
-    this.searchField.value = "";
+    this.searchOverlay.addClass("search-overlay--active");
+    jquery__WEBPACK_IMPORTED_MODULE_1___default()("body").addClass("body-no-scroll");
+    this.searchField.val("");
     setTimeout(() => this.searchField.focus(), 301);
-    console.log("our open method just ran!");
     this.isOverlayOpen = true;
-    return false;
   }
   closeOverlay() {
-    this.searchOverlay.classList.remove("search-overlay--active");
-    document.body.classList.remove("body-no-scroll");
-    console.log("our close method just ran!");
+    this.searchOverlay.removeClass("search-overlay--active");
+    jquery__WEBPACK_IMPORTED_MODULE_1___default()("body").removeClass("body-no-scroll");
     this.isOverlayOpen = false;
   }
   addSearchHTML() {
-    document.body.insertAdjacentHTML("beforeend", `
+    jquery__WEBPACK_IMPORTED_MODULE_1___default()("body").append(`
       <div class="search-overlay">
         <div class="search-overlay__top">
           <div class="container">
@@ -2602,7 +2597,6 @@ class Search {
         <div class="container">
           <div id="search-overlay__results"></div>
         </div>
-
       </div>
     `);
   }

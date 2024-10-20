@@ -1,14 +1,14 @@
 import axios from "axios";
+import $ from "jquery";
 
 class Search {
-  // 1. describe and create/initiate our object
   constructor() {
     this.addSearchHTML();
-    this.resultsDiv = document.querySelector("#search-overlay__results");
-    this.openButton = document.querySelectorAll(".js-search-trigger");
-    this.closeButton = document.querySelector(".search-overlay__close");
-    this.searchOverlay = document.querySelector(".search-overlay");
-    this.searchField = document.querySelector("#search-term");
+    this.resultsDiv = $("#search-overlay__results");
+    this.openButton = $(".js-search-trigger");
+    this.closeButton = $(".search-overlay__close");
+    this.searchOverlay = $(".search-overlay");
+    this.searchField = $("#search-term");
     this.isOverlayOpen = false;
     this.isSpinnerVisible = false;
     this.previousValue;
@@ -16,88 +16,65 @@ class Search {
     this.events();
   }
 
-  // 2. events
   events() {
-    this.openButton.forEach((el) => {
-      el.addEventListener("click", (e) => {
-        e.preventDefault();
-        this.openOverlay();
-      });
+    this.openButton.on("click", (e) => {
+      e.preventDefault();
+      this.openOverlay();
     });
 
-    this.closeButton.addEventListener("click", () => this.closeOverlay());
-    document.addEventListener("keydown", (e) => this.keyPressDispatcher(e));
-    this.searchField.addEventListener("keyup", () => this.typingLogic());
+    this.closeButton.on("click", () => this.closeOverlay());
+    $(document).on("keydown", (e) => this.keyPressDispatcher(e));
+    this.searchField.on("keyup", () => this.typingLogic());
   }
 
-  // 3. methods (function, action...)
   typingLogic() {
-    if (this.searchField.value != this.previousValue) {
+    if (this.searchField.val() !== this.previousValue) {
       clearTimeout(this.typingTimer);
 
-      if (this.searchField.value) {
+      if (this.searchField.val()) {
         if (!this.isSpinnerVisible) {
-          this.resultsDiv.innerHTML = '<div class="spinner-loader"></div>';
+          this.resultsDiv.html('<div class="spinner-loader"></div>');
           this.isSpinnerVisible = true;
         }
         this.typingTimer = setTimeout(this.getResults.bind(this), 750);
       } else {
-        this.resultsDiv.innerHTML = "";
+        this.resultsDiv.html("");
         this.isSpinnerVisible = false;
       }
     }
 
-    this.previousValue = this.searchField.value;
+    this.previousValue = this.searchField.val();
   }
 
   async getResults() {
     try {
       const response = await axios.get(
-        universityData.root_url +
-          "/wp-json/university/v1/search?term=" +
-          this.searchField.value
+        universityData.root_url + "/wp-json/university/v1/search?term=" + this.searchField.val()
       );
       const results = response.data;
-      this.resultsDiv.innerHTML = `
+
+      this.resultsDiv.html(`
         <div class="row">
           <div class="one-third">
             <h2 class="search-overlay__section-title">General Information</h2>
-            ${
-              results.generalInfo.length
-                ? '<ul class="link-list min-list">'
-                : "<p>No general information matches that search.</p>"
-            }
+            ${results.generalInfo.length ? '<ul class="link-list min-list">' : "<p>No general information matches that search.</p>"}
               ${results.generalInfo
                 .map(
-                  (item) =>
-                    `<li><a href="${item.permalink}">${item.title}</a> ${
-                      item.postType == "post" ? `by ${item.authorName}` : ""
-                    }</li>`
+                  (item) => `<li><a href="${item.permalink}">${item.title}</a> ${item.postType == "post" ? `by ${item.authorName}` : ""}</li>`
                 )
                 .join("")}
             ${results.generalInfo.length ? "</ul>" : ""}
           </div>
           <div class="one-third">
             <h2 class="search-overlay__section-title">Programs</h2>
-            ${
-              results.programs.length
-                ? '<ul class="link-list min-list">'
-                : `<p>No programs match that search. <a href="${universityData.root_url}/programs">View all programs</a></p>`
-            }
+            ${results.programs.length ? '<ul class="link-list min-list">' : `<p>No programs match that search. <a href="${universityData.root_url}/programs">View all programs</a></p>`}
               ${results.programs
-                .map(
-                  (item) =>
-                    `<li><a href="${item.permalink}">${item.title}</a></li>`
-                )
+                .map((item) => `<li><a href="${item.permalink}">${item.title}</a></li>`)
                 .join("")}
             ${results.programs.length ? "</ul>" : ""}
 
             <h2 class="search-overlay__section-title">Professors</h2>
-            ${
-              results.professors.length
-                ? '<ul class="professor-cards">'
-                : `<p>No professors match that search.</p>`
-            }
+            ${results.professors.length ? '<ul class="professor-cards">' : `<p>No professors match that search.</p>`}
               ${results.professors
                 .map(
                   (item) => `
@@ -111,29 +88,17 @@ class Search {
                 )
                 .join("")}
             ${results.professors.length ? "</ul>" : ""}
-
           </div>
           <div class="one-third">
             <h2 class="search-overlay__section-title">Campuses</h2>
-            ${
-              results.campuses.length
-                ? '<ul class="link-list min-list">'
-                : `<p>No campuses match that search. <a href="${universityData.root_url}/campuses">View all campuses</a></p>`
-            }
+            ${results.campuses.length ? '<ul class="link-list min-list">' : `<p>No campuses match that search. <a href="${universityData.root_url}/campuses">View all campuses</a></p>`}
               ${results.campuses
-                .map(
-                  (item) =>
-                    `<li><a href="${item.permalink}">${item.title}</a></li>`
-                )
+                .map((item) => `<li><a href="${item.permalink}">${item.title}</a></li>`)
                 .join("")}
             ${results.campuses.length ? "</ul>" : ""}
 
             <h2 class="search-overlay__section-title">Events</h2>
-            ${
-              results.events.length
-                ? ""
-                : `<p>No events match that search. <a href="${universityData.root_url}/events">View all events</a></p>`
-            }
+            ${results.events.length ? "" : `<p>No events match that search. <a href="${universityData.root_url}/events">View all events</a></p>`}
               ${results.events
                 .map(
                   (item) => `
@@ -150,10 +115,9 @@ class Search {
               `
                 )
                 .join("")}
-
           </div>
         </div>
-      `;
+      `);
       this.isSpinnerVisible = false;
     } catch (e) {
       console.log(e);
@@ -161,41 +125,30 @@ class Search {
   }
 
   keyPressDispatcher(e) {
-    if (
-      e.keyCode == 83 &&
-      !this.isOverlayOpen &&
-      document.activeElement.tagName != "INPUT" &&
-      document.activeElement.tagName != "TEXTAREA"
-    ) {
+    if (e.keyCode == 83 && !this.isOverlayOpen && !["INPUT", "TEXTAREA"].includes(document.activeElement.tagName)) {
       this.openOverlay();
     }
-
     if (e.keyCode == 27 && this.isOverlayOpen) {
       this.closeOverlay();
     }
   }
 
   openOverlay() {
-    this.searchOverlay.classList.add("search-overlay--active");
-    document.body.classList.add("body-no-scroll");
-    this.searchField.value = "";
+    this.searchOverlay.addClass("search-overlay--active");
+    $("body").addClass("body-no-scroll");
+    this.searchField.val("");
     setTimeout(() => this.searchField.focus(), 301);
-    console.log("our open method just ran!");
     this.isOverlayOpen = true;
-    return false;
   }
 
   closeOverlay() {
-    this.searchOverlay.classList.remove("search-overlay--active");
-    document.body.classList.remove("body-no-scroll");
-    console.log("our close method just ran!");
+    this.searchOverlay.removeClass("search-overlay--active");
+    $("body").removeClass("body-no-scroll");
     this.isOverlayOpen = false;
   }
 
   addSearchHTML() {
-    document.body.insertAdjacentHTML(
-      "beforeend",
-      `
+    $("body").append(`
       <div class="search-overlay">
         <div class="search-overlay__top">
           <div class="container">
@@ -208,10 +161,8 @@ class Search {
         <div class="container">
           <div id="search-overlay__results"></div>
         </div>
-
       </div>
-    `
-    );
+    `);
   }
 }
 

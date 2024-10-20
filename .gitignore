@@ -18,6 +18,9 @@
 /xmlrpc.php
 .env
 
+#modules
+node_modules
+
 # Configuration
 wp-config.php
 
